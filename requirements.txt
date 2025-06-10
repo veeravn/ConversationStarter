@@ -1,0 +1,8 @@
+langchain>=0.1.17
+openai>=1.23.0
+llama-index>=0.10.30
+python-dotenv
+beautifulsoup4
+requests
+tqdm
+

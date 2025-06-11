@@ -4,7 +4,7 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents.agent_types import AgentType
 from langchain.tools import tool
 from tools.linkedin_search import search_linkedin
-from tools.profile_scraper import scrape_profile_text
+from tools.profile_scrapper import scrape_profile_text
 
 @tool
 def linkedin_search_tool(name: str) -> str:

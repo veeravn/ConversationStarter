@@ -2,9 +2,9 @@ import os
 from langchain.chat_models import AzureChatOpenAI
 from langchain_core.messages import HumanMessage
 from langgraph.graph import END, StateGraph
-from llama_index import VectorStoreIndex, Document
+from llama_index.core import VectorStoreIndex, Document
 from tools.linkedin_search import search_linkedin
-from tools.profile_scraper import scrape_profile_text
+from tools.profile_scrapper import scrape_profile_text
 
 llm = AzureChatOpenAI(
     deployment_name=os.getenv("AZURE_OPENAI_DEPLOYMENT"),

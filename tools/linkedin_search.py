@@ -1,5 +1,4 @@
-import os
-import requests
+import os, requests
 
 def search_linkedin(query: str) -> str:
     params = {
@@ -12,5 +11,4 @@ def search_linkedin(query: str) -> str:
     for result in results:
         if "linkedin.com/in/" in result.get("link", ""):
             return result["link"]
-    return "No LinkedIn profile found."
-
+    return "No profile found"

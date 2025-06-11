@@ -1,19 +1,15 @@
 import os
 from dotenv import load_dotenv
-from chains.conversation_agent import get_llama_agent
+from graph.graph_builder import build_convo_graph
 
 load_dotenv()
+graph = build_convo_graph()
 
 def main():
-    agent = get_llama_agent()
-    name = input("Enter person or company name: ")
-    question = f"""Find the LinkedIn profile of {name}, extract summary details,
-and generate 3 professional and 2 casual conversation starters."""
-    
-    response = agent.run(question)
+    name = input("Enter a person's or company's name: ")
+    final_state = graph.invoke({"name": name})
     print("\n📌 Conversation Starters:\n")
-    print(response)
+    print(final_state["output"])
 
 if __name__ == "__main__":
     main()
-

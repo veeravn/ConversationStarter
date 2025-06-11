@@ -7,5 +7,4 @@ def scrape_profile_text(url: str) -> str:
     soup = BeautifulSoup(response.text, "html.parser")
     text = soup.get_text(separator="\n")
     lines = [line.strip() for line in text.splitlines() if len(line.strip()) > 30]
-    return "\n".join(lines[:50])  # Return top 50 non-trivial lines
-
+    return "\n".join(lines[:50])

@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: acrconvoai.azurecr.io/convo-ui
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+resources: {}

@@ -13,3 +13,4 @@ fastapi
 uvicorn[standard]
 llama-index-llms-langchain
 llama-index-embeddings-langchain
+prometheus-fastapi-instrumentator

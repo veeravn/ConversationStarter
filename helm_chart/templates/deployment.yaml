@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "conversation-starter.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "conversation-starter.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "conversation-starter.name" . }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.service.targetPort }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+        - name: conversation-starter
+          image: acrconvoai.azurecr.io/convo-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: azure-openai-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20

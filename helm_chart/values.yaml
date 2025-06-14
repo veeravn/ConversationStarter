@@ -1,0 +1,31 @@
+replicaCount: 1
+
+image:
+  repository: acrconvoai.azurecr.io/convo-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: convo.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []  # Optional TLS
+
+env:
+  AZURE_OPENAI_ENDPOINT: "https://veerav-ai.openai.azure.com/"
+  AZURE_OPENAI_API_KEY: ""
+  AZURE_OPENAI_DEPLOYMENT: "gpt-4.1"
+  AZURE_OPENAI_API_VERSION: "2025-01-01-preview"
+  AZURE_OPENAI_EMBEDDING_DEPLOYMENT: "text-embedding-3-small"
+
+resources: {}

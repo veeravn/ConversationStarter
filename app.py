@@ -4,12 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from graph.graph_builder import build_convo_graph
 from dotenv import load_dotenv
 import re, traceback, os
+from prometheus_fastapi_instrumentator import Instrumentator
 
 load_dotenv()
 print("🔍 LLM Deployment:", os.getenv("AZURE_OPENAI_DEPLOYMENT"))
-print("🔍 Embed Deployment Name:", os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME"))
 print("🔍 Embed Model ID:", os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT"))
 app = FastAPI(title="AI Conversation Starter", version="1.0")
+
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,6 +30,10 @@ class ConversationResponse(BaseModel):
     name: str
     professional: list[str]
     casual: list[str]
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 @app.post("/generate", response_model=ConversationResponse)
 def generate_conversation(request: ConversationRequest):

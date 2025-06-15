@@ -15,7 +15,7 @@ Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Or "*"
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -31,11 +31,11 @@ class ConversationResponse(BaseModel):
     professional: list[str]
     casual: list[str]
 
-@app.get("/health")
+@app.get("/api/health")
 def health_check():
     return {"status": "ok"}
 
-@app.post("/generate", response_model=ConversationResponse)
+@app.post("/api/generate", response_model=ConversationResponse)
 def generate_conversation(request: ConversationRequest):
     try:
         print(f"\n🔍 Invoking LangGraph with name: {request.name}")

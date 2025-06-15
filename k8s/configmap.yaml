@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: convo-ui-config
+  namespace: convo-app
+data:
+  REACT_APP_API_URL: http://convo-api-lb.convo-app.svc.cluster.local/api

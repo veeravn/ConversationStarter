@@ -1,0 +1,46 @@
+# python-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: convo-ai
+  namespace: convo-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: convo-app
+  template:
+    metadata:
+      labels:
+        app: convo-app
+    spec:
+      containers:
+        - envFrom:
+          - secretRef:
+              name: azure-openai-secrets
+          image: acrconvoai.azurecr.io/convo-app:latest
+          imagePullPolicy: Always
+          name: conversation-starter
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: convo-ai-service
+  namespace: convo-app
+spec:
+  selector:
+    app: convo-app
+  ports:
+    - port: 80
+      targetPort: 8000
+  type: ClusterIP

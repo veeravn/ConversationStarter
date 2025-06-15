@@ -54,7 +54,11 @@ def start_node(state: ConversationState) -> ConversationState:
 # 🔹 Step 2: Search LinkedIn
 def search_node(state: ConversationState) -> ConversationState:
     profile_url = search_linkedin(state["name"])
-    return {"profile_url": profile_url}
+    print(f"🔍 Found LinkedIn profile URL: {profile_url}")
+    if profile_url != "No profile found":
+        return {"profile_url": profile_url}
+    else:
+        raise ValueError("No LinkedIn profile found for the given name.")
 
 # 🔹 Step 3: Scrape LinkedIn profile
 def scrape_node(state: ConversationState) -> ConversationState:

@@ -23,5 +23,8 @@ COPY --from=builder /app/build /usr/share/nginx/html
 # Optional: custom Nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+ENV REACT_APP_API_URL=http://convo-app-conversation-starter.convo-ai.svc.cluster.local
+
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

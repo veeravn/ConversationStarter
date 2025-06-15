@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: convo-ui-lb
+  namespace: convo-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: convo-ui
+  ports:
+    - port: 80
+      targetPort: 80

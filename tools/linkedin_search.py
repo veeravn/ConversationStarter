@@ -1,6 +1,8 @@
 import os, requests
 
 def search_linkedin(query: str) -> str:
+    if not os.getenv("SERPAPI_API_KEY"):
+        ValueError("SERPAPI_API_KEY environment variable not set")
     params = {
         "q": f"{query} site:linkedin.com/in/",
         "engine": "google",

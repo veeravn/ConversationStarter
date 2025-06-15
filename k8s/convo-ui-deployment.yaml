@@ -1,0 +1,52 @@
+# react-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: convo-ui-deployment
+  namespace: convo-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: convo-ui
+  template:
+    metadata:
+      labels:
+        app: convo-ui
+    spec:
+      containers:
+      - name: convo-ui
+        env:
+        - name: REACT_APP_ENV
+          value: "production"
+        - name: REACT_APP_API_URL
+          valueFrom:
+            configMapKeyRef:
+              key: REACT_APP_API_URL
+              name: convo-ui-config
+        image: acrconvoai.azurecr.io/convo-ui:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: convo-ui-service
+  namespace: convo-app
+spec:
+  selector:
+    app: convo-ui
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP

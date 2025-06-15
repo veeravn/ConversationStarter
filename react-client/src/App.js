@@ -1,47 +1,69 @@
 import React, { useState } from "react";
-import ChatBubble from "./components/ChatBubble";
-import InputBar from "./components/InputBar";
 import "./index.css";
 
 function App() {
-  const [messages, setMessages] = useState([]);
+  const [name, setName] = useState("");
+  const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = async (name) => {
+  const API_URL = "http://132.196.215.105";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
-    setMessages((prev) => [...prev, { type: "user", content: name }]);
+    setError(null);
+    setOutput("");
 
     try {
-      const response = await fetch("http://localhost:8000/generate", {
+      const response = await fetch(`${API_URL}/api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name }),
       });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`HTTP error: ${response.status} - ${text}`);
+      }
+
       const data = await response.json();
+      setOutput(`
+        ${data.professional.join("\n- ")}
 
-      const starters = [
-        { type: "assistant", role: "Professional", content: data.professional },
-        { type: "assistant", role: "Casual", content: data.casual },
-      ];
-
-      setMessages((prev) => [...prev, ...starters]);
+        Casual:
+        - ${data.casual.join("\n- ")}
+      `);
     } catch (err) {
-      setMessages((prev) => [...prev, { type: "error", content: "Failed to fetch response." }]);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="app">
-      <h1>AI Conversation Starter</h1>
-      <div className="chat-box">
-        {messages.map((msg, idx) => (
-          <ChatBubble key={idx} message={msg} />
-        ))}
-        {loading && <ChatBubble message={{ type: "assistant", content: "Generating..." }} />}
-      </div>
-      <InputBar onSubmit={handleSubmit} disabled={loading} />
+    <div className="App">
+      <h1>Conversation Starter</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter a person's name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Generating..." : "Generate"}
+        </button>
+      </form>
+
+      {error && <p className="error">❌ {error}</p>}
+      {output && (
+        <div className="output">
+          <h3>Generated Starters:</h3>
+          <pre>{output}</pre>
+        </div>
+      )}
     </div>
   );
 }
